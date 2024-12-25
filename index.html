@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrollsApps.Space</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(45deg, #000000, #1a1a1a, #333333, #000000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Language switcher styles */
+        .lang-switch {
+            position: fixed;
+            left: 20px;
+            top: 100px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lang-switch:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Add neon effect to icons */
+        .fas, .fab {
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, #ffffff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: stars 4s linear infinite;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .floating-icons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-icon {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.8);
+            animation: float 20s infinite linear;
+            filter: blur(0.5px);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            top: 100vh;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateZ(0);
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        nav .logo:hover {
+            transform: scale(1.05);
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        nav .nav-links a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            padding-top: 80px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 6rem 2rem;
+            width: 100%;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #fff, #ccc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        .download-btn {
+            padding: 1.2rem 3.5rem;
+            font-size: 1.3rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .info-card {
+            background: rgba(20, 20, 20, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .info-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .info-card p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .feature i {
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover i {
+            transform: scale(1.1);
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes stars {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-200px); }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0;
+            }
+            25% {
+                transform: translate(-20px, -50vh) rotate(90deg) scale(1.2);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(20px, -100vh) rotate(180deg) scale(1);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translate(-20px, -150vh) rotate(270deg) scale(1.2);
+                opacity: 0.3;
+            }
+            100% {
+                transform: translate(0, -200vh) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.1); }
+            50% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.3); }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem; }
+            .nav-links { display: none; }
+            h1 { font-size: 2.5rem; }
+            .hero-section { padding: 4rem 1rem; }
+            .info-section { padding: 2rem 1rem; }
+            .download-btn { padding: 1rem 2.5rem; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <button class="lang-switch">
+        <i class="fas fa-globe"></i>
+        <span class="lang-text">EN</span>
+    </button>
+
+    <div class="floating-icons">
+        <!-- Icons will be added by JavaScript -->
+    </div>
+
+    <nav>
+        <a href="#" class="logo">
+            <i class="fas fa-mobile-alt"></i>
+            TrollsApps
+        </a>
+        <div class="nav-links">
+            <a href="#about"><i class="fas fa-info-circle"></i> <span>About</span></a>
+            <a href="#features"><i class="fas fa-star"></i> <span>Features</span></a>
+            <a href="#submit"><i class="fas fa-upload"></i> <span>Add App</span></a>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <section class="hero-section">
+            <h1>TrollApps.Space</h1>
+            <a href="https://t.me/trollsapps" class="download-btn" target="_blank">
+                <i class="fas fa-download"></i>
+                <span>Download .IPA</span>
+            </a>
+        </section>
+
+        <section class="info-section">
+            <div class="info-card" id="about">
+                <h2><i class="fas fa-rocket"></i> <span>About TrollApps</span></h2>
+                <p>Welcome to TrollsApps - your ultimate destination for enhanced iOS experiences! We provide a secure platform for discovering and installing powerful applications that extend your device's capabilities beyond standard limitations.</p>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Secure Installation</h3>
+                        <p>All apps are verified and safe to install through TrollStore.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-sync-alt"></i>
+                        <h3>Regular Updates</h3>
+                        <p>Frequent updates ensure optimal performance and compatibility.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card" id="submit">
+                <h2><i class="fas fa-code"></i> <span>Submit Your App</span></h2>
+                <p>Are you a developer creating innovative iOS applications? Join our growing community and share your creations with users worldwide who appreciate enhanced functionality and creative solutions.</p>
+                <p>Use our Telegram bot for a simple submission process:</p>
+                <a href="https://t.me/trollsapps_bot" class="download-btn" target="_blank">
+                    <i class="fab fa-telegram"></i>
+                    @trollsapps_bot
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Language translations
+        const translations = {
+            en: {
+                about: 'About',
+                features: 'Features',
+                submitApp: 'Add App',
+                download: 'Download .IPA',
+                aboutTitle: 'About TrollsApps',
+                aboutText: 'Welcome to TrollsApps - your ultimate destination for enhanced iOS experiences! We provide a secure platform for discovering and installing powerful applications that extend your device\'s capabilities beyond standard limitations.',
+                secureInstall: 'Secure Installation',
+                secureInstallText: 'All apps are verified and safe to install through TrollStore.',
+                updates: 'Regular Updates',
+                updatesText: 'Frequent updates ensure optimal performance and compatibility.',
+                submitTitle: 'Submit Your App',
+                submitText: 'Are you a developer creating innovative iOS applications? Join our growing community and share your creations with users worldwide who appreciate enhanced functionality and creative solutions.',
+                submitProcess: 'Use our Telegram bot for a simple submission process:',
+            },
+            ru: {
+                about: 'О нас',
+                features: 'Функции',
+                submitApp: 'Добавить приложение',
+                download: 'Скачать .IPA',
+                aboutTitle: 'О TrollApps',
+                aboutText: 'Добро пожаловать в TrollApps - ваш главный источник расширенных возможностей для iOS! Мы предоставляем безопасную платформу для поиска и установки мощных приложений, которые расширяют возможности вашего устройства.',
+                secureInstall: 'Безопасная установка',
+                secureInstallText: 'Все приложения проверены и безопасны для установки через TrollStore.',
+                updates: 'Регулярные обновления',
+                updatesText: 'Частые обновления обеспечивают оптимальную производительность и совместимость.',
+                submitTitle: 'Добавьте своё приложение',
+                submitText: 'Вы разработчик, создающий инновационные приложения для iOS? Присоединяйтесь к нашему растущему сообществу и делитесь своими творениями с пользователями по всему миру.',
+                submitProcess: 'Используйте наш Telegram бот для простого добавления:',
+            }
+        };
+
+        // Add floating icons
+        const icons = ['fa-mobile-alt', 'fa-code', 'fa-rocket', 'fa-star', 'fa-shield-alt'];
+        const container = document.querySelector('.floating-icons');
+        
+        for (let i = 0; i < 15; i++) {
+            const icon = document.createElement('i');
+            icon.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} floating-icon`;
+            icon.style.left = `${Math.random() * 100}vw`;
+            icon.style.animationDelay = `${Math.random() * 20}s`;
+            icon.style.fontSize = `${Math.random() * 20 + 10}px`;
+            container.appendChild(icon);
+        }
+
+        // Language switching functionality
+        let currentLang = 'en';
+        const langSwitch = document.querySelector('.lang-switch');
+        const langText = document.querySelector('.lang-text');
+
+        function updateContent(lang) {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            langText.textContent = lang.toUpperCase();
+        }
+
+        // Add data-translate attributes
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update navigation links
+            document.querySelector('a[href="#about"] span').setAttribute('data-translate', 'about');
+            document.querySelector('a[href="#features"] span').setAttribute('data-translate', 'features');
+            document.querySelector('a[href="#submit"] span').setAttribute('data-translate', 'submitApp');
+            
+            // Update download button
+            document.querySelector('.hero-section .download-btn span').setAttribute('data-translate', 'download');
+            
+            // Update about section
+            document.querySelector('#about h2 span').setAttribute('data-translate', 'aboutTitle');
+            document.querySelector('#about > p').setAttribute('data-translate', 'aboutText');
+            
+            // Update features
+            document.querySelector('.feature:nth-child(1) h3').setAttribute('data-translate', 'secureInstall');
+            document.querySelector('.feature:nth-child(1) p').setAttribute('data-translate', 'secureInstallText');
+            document.querySelector('.feature:nth-child(2) h3').setAttribute('data-translate', 'updates');
+            document.querySelector('.feature:nth-child(2) p').setAttribute('data-translate', 'updatesText');
+            
+            // Update submit section
+            document.querySelector('#submit h2 span').setAttribute('data-translate', 'submitTitle');
+            document.querySelector('#submit p:first-of-type').setAttribute('data-translate', 'submitText');
+            document.querySelector('#submit p:nth-of-type(2)').setAttribute('data-translate', 'submitProcess');
+            
+            // Initialize content
+            updateContent(currentLang);
+        });
+
+        langSwitch.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            updateContent(currentLang);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                const navHeight = document.querySelector('nav').offsetHeight;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
